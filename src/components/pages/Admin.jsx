@@ -13,7 +13,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/blogs");
+        const response = await axios.get("http://localhost:10000/api/blogs");
         setBlogs(response.data);
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -25,7 +25,7 @@ const Admin = () => {
 
   const handlePostBlog = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/blogs", {
+      const response = await axios.post("http://localhost:10000/api/blogs", {
         title: blogTitle,
         content: blogContent,
       });
@@ -40,7 +40,7 @@ const Admin = () => {
   const handleEditBlog = async (id) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/blogs/${id}`,
+        `http://localhost:10000/api/blogs/${id}`,
         {
           title: blogTitle,
           content: blogContent,
@@ -57,7 +57,7 @@ const Admin = () => {
 
   const handleDeleteBlog = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/blogs/${id}`);
+      await axios.delete(`http://localhost:10000/api/blogs/${id}`);
       setBlogs(blogs.filter((blog) => blog._id !== id));
     } catch (error) {
       console.error("Error deleting blog:", error);
