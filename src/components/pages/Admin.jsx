@@ -1,4 +1,3 @@
-// src/components/pages/Admin.jsx
 import React, { useState, useEffect } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -9,23 +8,63 @@ const Admin = () => {
   const [blogTitle, setBlogTitle] = useState("");
   const [blogs, setBlogs] = useState([]);
   const [editingBlogId, setEditingBlogId] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Set up Axios to include the token in headers
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await axios.get("http://localhost:10000/api/blogs");
-        setBlogs(response.data);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      }
-    };
+    if (isAuthenticated) {
+      const fetchBlogs = async () => {
+        try {
+          const response = await axios.get("http://localhost:5000/api/blogs");
+          setBlogs(response.data);
+        } catch (error) {
+          console.error("Error fetching blogs:", error);
+        }
+      };
 
-    fetchBlogs();
-  }, []);
+      fetchBlogs();
+    }
+  }, [isAuthenticated]);
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/admin/login", {
+        email,
+        password,
+      });
+
+      localStorage.setItem("token", response.data.token);
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response.data.token}`;
+      setIsAuthenticated(true);
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrorMessage("Invalid credentials. Please try again.");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    delete axios.defaults.headers.common["Authorization"];
+    setIsAuthenticated(false);
+  };
 
   const handlePostBlog = async () => {
     try {
-      const response = await axios.post("http://localhost:10000/api/blogs", {
+      const response = await axios.post("http://localhost:5000/api/blogs", {
         title: blogTitle,
         content: blogContent,
       });
@@ -40,7 +79,7 @@ const Admin = () => {
   const handleEditBlog = async (id) => {
     try {
       const response = await axios.put(
-        `http://localhost:10000/api/blogs/${id}`,
+        `http://localhost:5000/api/blogs/${id}`,
         {
           title: blogTitle,
           content: blogContent,
@@ -57,18 +96,55 @@ const Admin = () => {
 
   const handleDeleteBlog = async (id) => {
     try {
-      await axios.delete(`http://localhost:10000/api/blogs/${id}`);
+      await axios.delete(`http://localhost:5000/api/blogs/${id}`);
       setBlogs(blogs.filter((blog) => blog._id !== id));
     } catch (error) {
       console.error("Error deleting blog:", error);
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="bg-[#2b2b2b] text-amber-100 p-8">
+        <h2 className="text-3xl font-bold mb-6 terminal-text">
+          &gt; Admin Login
+        </h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 mb-4 bg-black/50 border-2 border-amber-600 text-amber-200"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 mb-4 bg-black/50 border-2 border-amber-600 text-amber-200"
+        />
+        <button
+          onClick={handleLogin}
+          className="mt-4 px-6 py-2 bg-amber-800 hover:bg-amber-700 transition border-2 border-amber-600"
+        >
+          LOGIN.exe
+        </button>
+        {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#2b2b2b] text-amber-100 p-8">
       <h2 className="text-3xl font-bold mb-6 terminal-text">
         &gt; Admin Panel
       </h2>
+      <button
+        onClick={handleLogout}
+        className="mb-4 px-6 py-2 bg-red-600 hover:bg-red-500 transition border-2 border-red-700"
+      >
+        LOGOUT.exe
+      </button>
       <input
         type="text"
         placeholder="Blog Title"

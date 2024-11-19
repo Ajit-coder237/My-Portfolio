@@ -1,36 +1,34 @@
 /* src/index.css */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-/* Retro theme styles with improved contrast */
 body {
-  background-color: #1a1a1a;  /* Darker background for better contrast */
-  font-family: 'Courier New', Courier, monospace;
-  color: #ffd700;  /* Brighter text color */
+  background-color: #1a1a1a;
+  font-family: "Courier New", Courier, monospace;
+  color: #ffd700;
 }
 
 .typewriter {
   overflow: hidden;
-  border-right: .15em solid #ffd700;  /* Brighter border color */
+  border-right: 0.15em solid #ffd700;
   white-space: nowrap;
-  animation: typing 3.5s steps(40, end),
-    blink-caret .75s step-end infinite;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 
 .terminal-text {
   position: relative;
-  font-family: 'Courier New', monospace;
-  color: #ffeeba;  /* Lighter shade for better readability */
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);  /* Subtle glow effect */
+  font-family: "Courier New", monospace;
+  color: #ffeeba;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
 }
 
 .crt-frame {
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);  /* Brighter glow */
-  background-color: rgba(0, 0, 0, 0.7);  /* Darker background for content */
-  border-color: #ffd700;  /* Brighter border */
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.7);
+  border-color: #ffd700;
 }
 
 .crt-frame::before {
@@ -41,32 +39,36 @@ body {
   left: 0;
   bottom: 0;
   right: 0;
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%,
-    rgba(0, 0, 0, 0.35) 50%  /* Increased contrast for scan lines */
-  );
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
   background-size: 100% 4px;
   pointer-events: none;
 }
 
-/* Improved animation keyframes */
 @keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: #ffd700 }  /* Brighter cursor color */
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #ffd700;
+  }
 }
 
-/* Add these utility classes for text highlights */
 .text-highlight {
   color: #ffd700;
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
 }
 
 .text-command {
-  color: #00ff00;  /* Bright green for commands */
+  color: #00ff00;
   text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
 }
